@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <sstream>
 #include <cmath>
+#include <getopt.h>
 
 using namespace std;
 
@@ -1103,14 +1104,14 @@ void NodeStats(node *curr_node)
 
   if (curr_node->problematic == 1 && curr_node->classifier.size() > TOO_MUCH)
   {
-    printf("Error: This problematic node has %d rules!\n",curr_node->classifier.size());
+    printf("Error: This problematic node has %zu rules!\n",curr_node->classifier.size());
     exit(1);
   }
 
   if (Num_Partitions != curr_node->children.size() 
       && curr_node->children.size() != 0 && compressionON == 0)
   {
-    printf("Error: num children != partitions!(%d != %d)\n",curr_node->children.size(),Num_Partitions);
+    printf("Error: num children != partitions!(%zu != %d)\n",curr_node->children.size(),Num_Partitions);
     exit(1);
   }
 
@@ -1487,7 +1488,7 @@ list<node*> nodeMerging(node * curr_node) {
     }
   }
   if (num > curr_node->children.size()) {
-    printf("Odd: Of %d children, %d were identical\n",newlist.size(),num);
+    printf("Odd: Of %zu children, %d were identical\n",newlist.size(),num);
   }
   return newlist;
 }
@@ -1540,7 +1541,7 @@ void regionCompaction(node * curr_node) {
 void create_tree(list <pc_rule*> p_classifier)
 {
 
-  printf("Incoming No of Rules in this tree = %d\n",p_classifier.size());
+  printf("Incoming No of Rules in this tree = %zu\n",p_classifier.size());
 
   list <node*> worklist;
 
@@ -1685,7 +1686,7 @@ void create_tree(list <pc_rule*> p_classifier)
             (*item)->boundary.field[4].low == curr_node->boundary.field[4].low && (*item)->boundary.field[4].high == curr_node->boundary.field[4].high &&
             (*item)->classifier.size() == curr_node->classifier.size())
         {
-          printf("Warning: parent and child are identical with %d rules!\n",curr_node->classifier.size());
+          printf("Warning: parent and child are identical with %zu rules!\n",curr_node->classifier.size());
           (*item)->problematic = 1;
           NodeStats(*item);
           ClearMem(*item);
@@ -2365,13 +2366,13 @@ void BinPack(int bins,list <TreeStat*> Statistics)
 
 }
 
-int ComputeCutoffs()
+void ComputeCutoffs()
 {
   if (binningON == 0)
   {
     Cutoffs[0] = numrules;
     Num_Junk = 1;
-    return 0;
+    return;
   }
   for (int i = 0;i < NUM_JUNK;i++)
   {
